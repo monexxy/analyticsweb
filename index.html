@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101014">
+  <meta name="description" content="UPGRADE ANALYTICS — историческая статистика и анализ завершённых результатов.">
+  <title>UPGRADE ANALYTICS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="UPGRADE ANALYTICS home">
+      <span class="brand-mark">U<span>↑</span></span>
+      <span class="brand-name">UPGRADE <b>ANALYTICS</b><small>HISTORICAL DATA PLATFORM</small></span>
+    </a>
+    <nav class="nav" aria-label="Main navigation">
+      <button class="nav-btn active" data-page="analysis">Анализ</button>
+      <button class="nav-btn" data-page="history">История</button>
+      <button class="nav-btn" data-page="stats">Статистика</button>
+      <button class="nav-btn" data-page="math">Математика</button>
+    </nav>
+    <div class="top-actions"><span class="live-dot"></span><span>ЛОКАЛЬНЫЙ УЧЁТ</span></div>
+  </header>
+
+  <main>
+    <section class="page active" id="page-analysis">
+      <div class="page-heading">
+        <div><div class="eyebrow">WORKSPACE / 01</div><h1>Аналитика результатов</h1><p>Записывайте только завершённые результаты и изучайте накопленную статистику.</p></div>
+        <div class="data-pill"><span class="live-dot"></span> ДАННЫЕ ИСТОРИИ</div>
+      </div>
+      <div class="analysis-grid">
+        <section class="panel input-panel">
+          <div class="panel-heading"><div><span class="step">01</span><h2>Параметры анализа</h2></div><span class="panel-tag">ВВОД</span></div>
+          <form id="analysis-form">
+            <label class="field-label" for="chance">Указанный шанс, %</label>
+            <div class="chance-control">
+              <input id="chance" type="number" min="0.01" max="99.99" step="0.01" value="30" inputmode="decimal">
+              <span>%</span>
+            </div>
+            <div class="presets">
+              <button type="button" data-chance="10">10%</button><button type="button" data-chance="25">25%</button>
+              <button type="button" class="selected" data-chance="30">30%</button><button type="button" data-chance="50">50%</button>
+            </div>
+            <div class="field-grid">
+              <div><label class="field-label" for="wins">Победы</label><input class="number-input" id="wins" type="number" min="0" step="1" value="0" inputmode="numeric"></div>
+              <div><label class="field-label" for="losses">Поражения</label><input class="number-input" id="losses" type="number" min="0" step="1" value="0" inputmode="numeric"></div>
+            </div>
+            <label class="field-label" for="streak">Текущая серия поражений</label>
+            <input class="number-input full" id="streak" type="number" min="0" step="1" value="0" inputmode="numeric">
+            <p class="helper">Учитывайте только результаты с тем же указанным шансом. Пустые значения считаются нулём.</p>
+            <button class="btn btn-primary full-btn" type="submit"><span>Рассчитать статистику</span><b>→</b></button>
+          </form>
+          <div class="divider"></div>
+          <div class="panel-heading compact"><div><span class="step red">02</span><h2>Добавить завершённый результат</h2></div></div>
+          <p class="helper">Запишите уже произошедший исход. Новые попытки из приложения не запускаются.</p>
+          <div class="outcome-buttons">
+            <button class="btn btn-win" id="add-win"><span>＋</span> Победа</button>
+            <button class="btn btn-loss" id="add-loss"><span>＋</span> Поражение</button>
+          </div>
+          <div id="notice" class="notice" role="status">Добавьте завершённые результаты, чтобы увидеть историческую сводку.</div>
+        </section>
+
+        <section class="panel result-panel">
+          <div class="panel-heading"><div><span class="step yellow">03</span><h2>Общий результат</h2></div><span class="panel-tag">СВОДКА</span></div>
+          <div class="main-metric">
+            <div class="metric-top"><span>ЕДИНАЯ ИСТОРИЧЕСКАЯ ОЦЕНКА</span><span class="metric-icon">↗</span></div>
+            <div class="metric-value" id="overall">—</div>
+            <p id="overall-note">Нужны прошлые результаты для расчёта.</p>
+          </div>
+          <div class="metric-grid">
+            <article class="metric-card"><span>ФАКТИЧЕСКАЯ ЧАСТОТА</span><strong id="empirical">—</strong><small>Доля побед среди записанных исходов</small></article>
+            <article class="metric-card"><span>БАЙЕСОВСКАЯ ОЦЕНКА</span><strong id="posterior">—</strong><small>Сглаженная оценка с учётом исходных данных</small></article>
+            <article class="metric-card"><span>95% ИНТЕРВАЛ</span><strong id="interval">—</strong><small>Диапазон неопределённости оценки</small></article>
+            <article class="metric-card"><span>ВЕРОЯТНОСТЬ ЧАСТОТЫ ВЫШЕ ШАНСА</span><strong id="above">—</strong><small>Оценка по накопленной выборке</small></article>
+          </div>
+          <div class="summary-strip">
+            <div><span>ВСЕГО ЗАПИСЕЙ</span><strong id="total">0</strong></div>
+            <div><span>ПОБЕДЫ</span><strong class="yellow-text" id="win-total">0</strong></div>
+            <div><span>ПОРАЖЕНИЯ</span><strong class="red-text" id="loss-total">0</strong></div>
+          </div>
+          <p class="disclaimer">Исторические данные описывают прошлые результаты и не предсказывают следующий независимый исход. Расчёт не является рекомендацией совершать новые попытки.</p>
+        </section>
+      </div>
+    </section>
+
+    <section class="page" id="page-history">
+      <div class="page-heading"><div><div class="eyebrow">WORKSPACE / 02</div><h1>История</h1><p>Последние сохранённые исходы и снимки расчётов.</p></div><button class="btn btn-outline" id="refresh-history">Обновить ↻</button></div>
+      <section class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>ТИП</th><th>ДАТА</th><th>ШАНС</th><th>РЕЗУЛЬТАТ / ДАННЫЕ</th></tr></thead><tbody id="history-body"><tr><td colspan="4" class="empty">Загрузка истории…</td></tr></tbody></table></div></section>
+    </section>
+
+    <section class="page" id="page-stats">
+      <div class="page-heading"><div><div class="eyebrow">WORKSPACE / 03</div><h1>Статистика</h1><p>Сводные показатели по записанным завершённым исходам.</p></div></div>
+      <div class="stats-cards">
+        <article class="panel stat-box"><span>ВСЕГО ИСХОДОВ</span><strong id="stat-total">0</strong></article>
+        <article class="panel stat-box"><span>ПОБЕД</span><strong class="yellow-text" id="stat-wins">0</strong></article>
+        <article class="panel stat-box"><span>ПОРАЖЕНИЙ</span><strong class="red-text" id="stat-losses">0</strong></article>
+        <article class="panel stat-box"><span>ФАКТИЧЕСКАЯ ЧАСТОТА</span><strong id="stat-rate">—</strong></article>
+      </div>
+      <section class="panel chart-panel"><div class="panel-heading"><div><span class="step yellow">04</span><h2>Последние результаты</h2></div></div><div id="chart" class="chart"><div class="empty">Пока нет записей для графика.</div></div><div class="legend"><span><i class="legend-win"></i> Победа</span><span><i class="legend-loss"></i> Поражение</span></div></section>
+    </section>
+
+    <section class="page" id="page-math">
+      <div class="page-heading"><div><div class="eyebrow">REFERENCE / 04</div><h1>Методика расчёта</h1><p>Что означают показатели и как читать сводку.</p></div></div>
+      <div class="math-grid">
+        <article class="panel math-card"><span class="math-number">01</span><h2>Фактическая частота</h2><div class="formula">победы ÷ все исходы × 100%</div><p>Простая доля побед в записанной выборке с тем же указанным шансом.</p></article>
+        <article class="panel math-card"><span class="math-number">02</span><h2>Байесовская оценка</h2><div class="formula">Beta(α + победы, β + поражения)</div><p>Сглаженная оценка, которая учитывает исходный шанс и количество наблюдений.</p></article>
+        <article class="panel math-card"><span class="math-number">03</span><h2>95% интервал</h2><div class="formula">2,5-й — 97,5-й процентили</div><p>Показывает диапазон неопределённости оценки на основе имеющихся записей.</p></article>
+        <article class="panel math-card"><span class="math-number">04</span><h2>Единая оценка</h2><div class="formula">(шанс + частота + байесовская оценка) ÷ 3</div><p>Описательная сводная величина. Это не вероятность следующего исхода.</p></article>
+      </div>
+      <div class="info-banner"><b>Важно</b><span>Если результаты формируются независимым случайным генератором, прошлые исходы сами по себе не меняют вероятность следующего. История нужна для учёта и описания данных, а не для предсказания.</span></div>
+    </section>
+  </main>
+  <footer><span>UPGRADE <b>ANALYTICS</b></span><span>HISTORICAL DATA · DESCRIPTIVE STATISTICS</span></footer>
+</div>
+<script src="/static/app.js"></script>
+</body></html>
